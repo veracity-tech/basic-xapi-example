@@ -26,6 +26,7 @@ In a nutshell:
 * Download the configured xAPI Wrapper from [Veracity Learning](https://lrs.io)
 * Place the xAPI Wrapper at the same location as this project's `index.html`
 * Open `index.html` in a browser
+* View the new statements in your Veracity LRS (left-side menu > XAPI Data > Statements)
   
 # License
 
