@@ -2,11 +2,13 @@
 
 ## Overview
 This project is a very simple example of using the xAPI Wrapper 
-downloaded from [Veracity Learning](https://lrs.io). Each LRS 
-provides a page to download a preconfigured xAPI Wrapper to use 
-in web content. This example project demonstrates how to include 
-the xAPI Wrapper in HTML, and how to send 'Initialized' and 
-'Terminated' statements to the Veracity Learning LRS.    
+downloaded from [Veracity Learning](https://lrs.io). Each Veracity 
+LRS provides a page to download a preconfigured xAPI Wrapper to use 
+in web content. You can find a link to the download page on the 
+left-hand menu under the 'Tools' section. This example project 
+demonstrates how to include the xAPI Wrapper in HTML, and how to 
+send 'Initialized' and 'Terminated' statements to the Veracity 
+Learning LRS.    
 
 ## Structure
 This example contains the following files:
@@ -18,7 +20,9 @@ This example contains the following files:
 See [Veracity Learning's](https://lrs.io) 'Getting Started' pages for 
 more detailed information on using this example.  
   
-In a nutshell:  
+In a nutshell: 
+* Go to your Veracity LRS home page
+* Find 'XAPI Wrapper' in the 'Tools' section on the left-side menu 
 * Download the configured xAPI Wrapper from [Veracity Learning](https://lrs.io)
 * Place the xAPI Wrapper at the same location as this project's `index.html`
 * Open `index.html` in a browser
