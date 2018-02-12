@@ -1,0 +1,208 @@
+<!--
+   Copyright 2018 Veracity Technology Consultants LLC
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!--
+    This basic example demonstrates integrating xAPI with web content. 
+    It only requires downloading the xAPIWrapper file from Veracity 
+    Learning and saving at the same location as this HTML file.
+
+    Opening this page in a browser will run the example and send statements 
+    to your Veracity Learning LRS. You can view them by logging in 
+    to Veracity Learning and viewing the statement viewer. 
+
+    For more information, view the README included with this project 
+    or the Getting Started resources on Veracity Learning.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Basic xAPI Example</title>
+
+
+    <!-- preconfigured xapiwrapper from Veracity Learning -->
+    <script src="./xapiwrapper.min.js"></script>
+
+
+    <!-- jquery and bootstrap for styling -->
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <!-- helper functions -->
+    <script>
+        function show (status, title, text) {
+            var newPanel = $(
+                '<div class="panel panel-'+status+'">' + 
+                    '<div class="panel-heading">' + 
+                        '<h3 class="panel-title">'+title+'</h3>' +
+                    '</div>' + 
+                    '<div class="panel-body">' +
+                        text +
+                    '</div>' +
+                '</div>'
+            );
+            $('#content').append(newPanel);
+        }
+
+        function wrapperExists() {
+            if (window.ADL && window.ADL.XAPIWrapper) {
+                show('success', 
+                    'xAPI Wrapper Included', 
+                    'The xAPI Wrapper was found!<br/>' + '<pre>' + JSON.stringify(ADL.XAPIWrapper.lrs, null, 4)) + '</pre>';
+                return true;
+            } else {
+                show('danger',
+                    'xAPI Wrapper Not Found!',
+                    'Be sure the xapiwrapper.min.js file downloaded from Veracity Learning ' + 
+                    'is located at the same place as this index.html file.'
+                );
+                return false;
+            }
+        }
+    </script>
+
+    <!-- statement template -->
+    <script>
+        var myXAPI = {
+            statement: {
+                actor: { 
+                    account: { 
+                        homePage: "https://lrslite.veracity.it/accounts", 
+                        name: "demolearner1" 
+                    }, 
+                    name: "Demo Learner"
+                },
+                object: { 
+                    id: "http://veracity.it/examples/basic-xapi-example/main",
+                    definition: {
+                        name: {"en-US": "Introduction to xAPI Integration in Web Content"},
+                        description: {"en-US": "This lesson demonstrates the basics of integrating xAPI in web content."},
+                        type: "http://adlnet.gov/expapi/activities/lesson"
+                    }
+                },
+                context: {
+                    contextActivities: {
+                        "grouping": [
+                            {
+                                "id": "http://veracity.it/examples/basic-xapi-example"
+                            }
+                        ],
+                        "category": [
+                            {
+                                "id":"https://w3id.org/xapi/scorm", 
+                                "definition": {
+                                    "type":"http://adlnet.gov/expapi/activities/profile"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+        
+        myXAPI.getBase = function () {
+            return JSON.parse(JSON.stringify(this.statement));
+        };
+        
+        myXAPI.initialize = function(starttime, cb) {
+            this.attemptGUID = ADL.ruuid();
+            var stmt = this.getBase();
+            stmt.verb = ADL.verbs.initialized;
+
+            stmt.timestamp = starttime.toISOString();
+            ADL.XAPIWrapper.sendStatement(stmt, function (resp) {
+                if (resp.status >= 200 && resp.status < 300) {
+                    cb(null, resp);
+                } else {
+                    cb(resp);
+                }
+            });
+        };
+
+        myXAPI.terminate = function(starttime, cb) {
+            this.attemptGUID = ADL.ruuid();
+            var stmt = this.getBase();
+            stmt.verb = ADL.verbs.terminated;
+
+            stmt.timestamp = starttime.toISOString();
+            ADL.XAPIWrapper.sendStatement(stmt, function (resp) {
+                if (resp.status >= 200 && resp.status < 300) {
+                    cb(null, resp);
+                } else {
+                    cb(resp);
+                }
+            });
+        };
+    </script>
+
+    <!-- error handler -->
+    <script>
+        if (window.ADL && window.XAPIWrapper) {
+            ADL.xhrRequestOnError = function(xhr, method, url, callback, callbackargs, strictCallbacks) {
+                callback({status: xhr.status, response: "The xAPI Wrapper encountered an error. Check the console for more details."});
+            }
+        }
+    </script>
+</head>
+
+
+<body class="container">
+    <h1>Welcome to xAPI</h1>
+
+    <div id="content"></div>
+
+    <hr/>
+    <p>
+        For information about the xAPI Wrapper features and functions see 
+        <a href="https://github.com/adlnet/xAPIWrapper/blob/master/README.md">ADL's xAPI Wrapper</a> GitHub page.
+    </p>
+    <p>
+        For information about the statement format used here see 
+        <a href="https://github.com/adlnet/xAPI-SCORM-Profile/blob/master/xapi-scorm-profile.md">ADL's SCORM Profile</a> documentation on GitHub.
+    </p>
+    
+
+    <!-- example use of wrapper -->
+    <script>
+    if (wrapperExists()) { 
+        // send 'Initialized' statement
+        myXAPI.initialize(new Date(), function (err, response) {
+            if (err) {
+                return show('danger', 'Failed Initialize', err.status + "<br/>" + err.response);
+            } 
+
+            show('success', 'Successful Initialize', 'Initialize was successful! Calling Terminate now.');
+            
+            myXAPI.terminate(new Date(), function (err, response) {
+                if (err) {
+                    return show('danger', 'Failed Terminate', err.status + "<br/>" + err.response);
+                }
+
+                show('success', 
+                     'Successful Terminate', 
+                     'Terminate was successful! This basic example is complete.<br/>The statements can be seen ' + 
+                     'in the Veracity Learning Statement Viewer.');
+            });
+        });
+    }
+    </script>
+    
+</body>
+</html>
