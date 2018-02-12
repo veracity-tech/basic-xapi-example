@@ -2,7 +2,7 @@
 
 ## Overview
 This project is a very simple example of using the xAPI Wrapper 
-downloaded from (Veracity Learning)[https://lrs.io]. Each LRS 
+downloaded from [Veracity Learning](https://lrs.io). Each LRS 
 provides a page to download a preconfigured xAPI Wrapper to use 
 in web content. This example project demonstrates how to include 
 the xAPI Wrapper in HTML, and how to send 'Initialized' and 
@@ -15,11 +15,11 @@ This example contains the following files:
 * README - This file
 
 ## Use
-See (Veracity Learning's)[https://lrs.io] 'Getting Started' pages for 
+See [Veracity Learning's](https://lrs.io) 'Getting Started' pages for 
 more detailed information on using this example.  
   
 In a nutshell:  
-* Download the configured xAPI Wrapper from (Veracity Learning)[https://lrs.io]
+* Download the configured xAPI Wrapper from [Veracity Learning](https://lrs.io)
 * Place the xAPI Wrapper at the same location as this project's `index.html`
 * Open `index.html` in a browser
   
